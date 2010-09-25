@@ -1,0 +1,23 @@
+{
+  "name": "ActiveCollab Viewer",
+  "version": "1.0",
+  "description": "Viewer for your activecollab projects and anything beyond",
+  "browser_action": {
+    "default_icon": "active_collab_icon.png",
+    "popup": "popup.html"
+  },
+    "background_page": "background.html",
+  "permissions": [
+    "notifications",
+    "tabs",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "icons": {
+    "19": "logo.gif",
+    "32": "logo.gif",
+    "48": "logo.gif"
+  },
+  "options_page": "options.html",
+  "update_url": "http://clients2.google.com/service/update2/crx"
+}

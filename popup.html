@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link type="text/css" href="css/custom-theme/jquery-ui-1.8.5.custom.css" rel="Stylesheet" />	
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.5.custom.min.js"></script>
+<style type="text/css">
+	#feedback { font-size: 1.4em; }
+	.project-list .ui-selecting { background: #FECA40; }
+	.project-list .ui-selected { background: #F39814; color: white; }
+	.project-list { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+	.project-list li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
+	input.text { margin-bottom:12px; width:95%; padding: .4em; }
+	fieldset { padding:0; border:0; margin-top:25px; }
+</style>
+<script type="text/javascript">
+	$(document).ready(function(){
+		//$('#date').datepicker();
+		$("#tabs").tabs({
+			select: function(event , ui){
+				if(ui.index == 1){
+					get_discussions();
+				}else if(ui.index == 2){
+					get_files_list();
+				}else if(ui.index == 4){
+					get_tickets_list();
+				}else if(ui.index == 6){
+					get_peoples_list();
+				}else if(ui.index == 7){
+					get_user_tasks();
+				}
+			}
+		});
+		
+		
+		$('#validate-user').click(function(){
+			validate_user();
+		});
+		$('#activecollab_url').val(localStorage.AC_api_url);
+		$('#api_key').val(localStorage.AC_api_key);
+		//show_dialog(localStorage.project_list);
+		if(localStorage.project_list == undefined){
+			//show_dialog('belum ada data');
+			get_project_list();
+		}else{
+			//show_dialog('sudah ada data');
+			get_project_list();
+			//localStorage.removeItem('project_list');
+		
+		}
+		$('.comment-detail').click(function() {
+			$(this).next().toggle();
+			return false;
+		}).next().hide();
+	});
+	function show_dialog(content){
+		//alert('ibnu');
+		$( "#validate-user-dialog" ).html('<p>'+content+'</p>');
+		$( "#validate-user-dialog" ).dialog();
+	}
+	function get_project_list(){
+		$.getJSON(localStorage.AC_api_url+'/public/api.php?path_info=projects&format=json&token='+localStorage.AC_api_key, function(data) {
+			var content = '';
+			localStorage['project_list'] = data;
+			$.each(data, function(i,item){
+				if(item.status != 'completed' && item.status != 'paused'  ){
+					content += '<li class="ui-widget-content" id="project-'+item.id+'">'+item.name+'</li>';	
+				}
+          	});
+			$( "#project-list" ).html(content);
+			create_project_list();
+			create_discussions_list();
+		});
+	}
+	function get_project_list_session(){
+		data = localStorage.project_list;
+		var content = '';
+		//localStorage['project_list'] = data;
+		$.each(data, function(i,item){
+			if(item.status != 'completed' && item.status != 'paused'  ){
+				content += '<li class="ui-widget-content" id="project-'+item.id+'">'+item.name+'</li>';	
+			}
+      	});
+		$( "#project-list" ).html(content);
+		create_project_list();
+		create_discussions_list();
+		
+	}
+	function set_project_id(id){
+		id = id.replace('project-','');
+		localStorage['project_id'] = id;
+	}
+	function get_discussions(){
+		$.getJSON(localStorage.AC_api_url+'/public/api.php?path_info=projects/'+localStorage.project_id+'/discussions&format=json&token='+localStorage.AC_api_key, function(data) {
+			var content = '';
+			$.each(data, function(i,item){
+				//content += '<h3><a href="#">'+item.name+'</a></h3><div><p>'+item.body+'</p><button onclick="show_discussion_detail('+item.id+');">Detail</button></div>';
+				content += '<li class="ui-widget-content" id="project-'+item.id+'">'+item.name+'</li>';	
+			});
+			$( "#discussions-list" ).html(content);
+			create_discussion_list();
+		});
+	}
+	function get_user_tasks(){
+		$.getJSON(localStorage.AC_api_url+'/public/api.php?path_info=projects/'+localStorage.project_id+'/user-tasks&format=json&token='+localStorage.AC_api_key, function(data) {
+			var content = '';
+			$.each(data, function(i,item){
+				//content += '<h3><a href="#">'+item.name+'</a></h3><div><p>'+item.body+'</p><button onclick="show_discussion_detail('+item.id+');">Detail</button></div>';
+				var class_selected = '';
+				if(item.type == 'Ticket'){
+					class_selected ='ui-selected';
+				}
+				content += '<li class="ui-widget-content '+class_selected+'" id="project-'+item.id+'">'+item.type+' #'+item.id+'</li>';	
+				content += '<p id="comment-'+item.id+'" style="display:block">'+item.name+'</p>';	
+
+			});
+			$( "#user-tasks-list" ).html(content);
+			
+		});
+	}
+	function get_files_list(){
+		$.getJSON(localStorage.AC_api_url+'/public/api.php?path_info=projects/'+localStorage.project_id+'/files&format=json&token='+localStorage.AC_api_key, function(data) {
+			var content = '';
+			$.each(data, function(i,item){
+				//content += '<h3><a href="#">'+item.name+'</a></h3><div><p>'+item.body+'</p><button onclick="show_discussion_detail('+item.id+');">Detail</button></div>';
+				content += '<li class="ui-widget-content" id="project-'+item.id+'">'+item.type+' '+item.name+'</li>';	
+				content += '<p id="comment-'+item.id+'" style="display:block">'+item.name+'</p>';	
+
+			});
+			$( "#files-list" ).html(content);
+		
+		});
+	}
+	function get_tickets_list(){
+		$.getJSON(localStorage.AC_api_url+'/public/api.php?path_info=projects/'+localStorage.project_id+'/tickets&format=json&token='+localStorage.AC_api_key, function(data) {
+			var content = '';
+			$.each(data, function(i,item){
+				//content += '<h3><a href="#">'+item.name+'</a></h3><div><p>'+item.body+'</p><button onclick="show_tickets_detail('+item.id+');">Detail</button></div>';
+				content += '<li class="ui-widget-content" id="project-'+item.id+'">'+item.type+' '+item.name+'</li>';	
+				content += '<p id="comment-'+item.id+'" style="display:block">'+item.body+' <button onclick="show_tickets_detail('+item.ticket_id+');">Detail</button></p>';	
+
+			});
+			$( "#tickets-list" ).html(content);
+		
+		});
+	}
+	function get_peoples_list(){
+		$.getJSON(localStorage.AC_api_url+'/public/api.php?path_info=projects/'+localStorage.project_id+'/people&format=json&token='+localStorage.AC_api_key, function(data) {
+			var content = '';
+			$.each(data, function(i,item){
+				//content += '<h3><a href="#">'+item.name+'</a></h3><div><p>'+item.body+'</p><button onclick="show_discussion_detail('+item.id+');">Detail</button></div>';
+				//content += '<li class="ui-widget-content" id="project-'+item.id+'">'+item.type+' '+item.role+'</li>';	
+				//content += '<p id="comment-'+item.id+'" style="display:block">'+item.body+'</p>';
+				$.each(item, function(j,item2){
+					content += item2+',';	
+				});
+				
+
+			});
+			$( "#peoples-list" ).html(content);
+		
+		});
+	}
+	function create_project_list(){
+		$("#project-list").selectable({
+			stop: function(){
+				var result = $("#select-result").empty();
+				$(".ui-selected", this).each(function(){
+					//var index = $("#selectable li").text(this);
+					var index = $(this).text();
+					result.html(index);
+				});
+			},
+			selecting : function(event,ui){
+				var content = '';
+				$.each(ui, function(i,item){
+					content += item.id;
+				});
+				set_project_id(content);
+			}
+		});
+	}
+	function create_discussions_list(){
+		$("#discussions-list").selectable({
+			selecting : function(event,ui){
+				var content = '';
+				$.each(ui, function(i,item){
+					content += item.id;
+				});
+				content = content.replace('project-','');
+				show_discussion_detail(content);
+			}
+		});
+	}
+	function show_discussion_detail(id){
+		$.getJSON(localStorage.AC_api_url+'/public/api.php?path_info=projects/'+localStorage.project_id+'/discussions/'+id+'&format=json&token='+localStorage.AC_api_key, function(data) {
+			var content = '';
+			header = data.name;
+			description = data.body;
+			$.each(data.comments, function(i,item){
+				//content += '<h3><a href="#">'+item.created_on+'</a></h3><div><p>'+item.body+'</p></div>';
+				content += '<li class="ui-widget-content comment-detail" id="project-'+item.id+'">'+item.created_on+' created by '+item.created_by_id+'</li>';
+				content += '<p id="comment-'+item.id+'" style="display:none">'+item.body+'</p>';	
+			});
+			//show_dialog(content);
+			$( "#discussion-header" ).html(header);
+			$( "#discussion-description" ).html(description);
+			$( "#discussions-list" ).html('');
+			$( "#discussions-list" ).html(content);
+			//create_discussion_detail();
+		});
+	}
+	function show_tickets_detail(id){
+		$.getJSON(localStorage.AC_api_url+'/public/api.php?path_info=projects/'+localStorage.project_id+'/tickets/'+id+'&format=json&token='+localStorage.AC_api_key, function(data) {
+			var content = '';
+			header = data.name;
+			description = data.body;
+			$.each(data.comments, function(i,item){
+				//content += '<h3><a href="#">'+item.created_on+'</a></h3><div><p>'+item.body+'</p></div>';
+				content += '<li class="ui-widget-content comment-detail" id="project-'+item.id+'">'+item.created_on+' created by '+item.created_by_id+'</li>';
+				content += '<p id="comment-'+item.id+'" style="display:none">'+item.body+'</p>';	
+			});
+			//show_dialog(content);
+			$( "#tickets-header" ).html(header);
+			$( "#tickets-description" ).html(description);
+			$( "#tickets-list" ).html('');
+			$( "#tickets-list" ).html(content);
+			//create_discussion_detail();
+		});
+	}
+</script>
+</head>
+<body style="min-width:650px;min-height:350px">
+<img src="active_collab_icon.png"/>ChromedCollab
+<div id="validate-user-dialog" title="Debug dialog" style="display:none">
+	<p>default value</p>
+</div>
+<div id="dialog-form" title="Create new user" style="display:none">
+	<p class="validateTips">All form fields are required.</p>
+
+	<form>
+	<fieldset>
+		<label for="name">Activecollab main URL</label>
+		<input type="text" name="activecollab_url" id="activecollab_url" class="text ui-widget-content ui-corner-all" /><br>
+		<label for="email">API key for you user</label>
+		<input type="text" name="api_key" id="api_key" value="" class="text ui-widget-content ui-corner-all" />
+	</fieldset>
+	<button id="validate-user">Validate user</button>
+	</form>
+</div>	
+<div id="tabs" >
+	<ul>name
+		<li><a href="#tabs-projects"><span id="select-result">Select project</span></a></li>
+		<li><a href="#tabs-discussion">discussion</a></li>
+		<li><a href="#tabs-files">files</a></li>
+		<li><a href="#tabs-calendar">calendar</a></li>
+		<li><a href="#tabs-tickets">tickets</a></li>
+		<li><a href="#tabs-time">time</a></li>
+		<li><a href="#tabs-people">people</a></li>
+		<li><a href="#tabs-user-tasks">user tasks</a></li>
+
+	</ul>
+	
+	<div id="tabs-projects">
+		<ol id="project-list" class="project-list">
+		</ol>
+	</div>
+	<div id="tabs-discussion">
+		<h3 id="discussion-header"></h3>
+		<p id="discussion-description"></p>
+		<ol id="discussions-list" class="project-list">
+		</ol>
+		
+		<div id="discussions-detail">			
+		</div>
+	</div>
+	<div id="tabs-files">
+		<ol id="files-list" class="project-list">
+		</ol>
+	</div>
+	<div id="tabs-calendar">
+		<p>for calendar</p>
+	</div>
+	<div id="tabs-tickets">
+		<ol id="tickets-list" class="project-list">
+		</ol>
+		
+	</div>
+	<div id="tabs-time">
+		<p>for tickets</p>
+		
+	</div>
+	<div id="tabs-people">
+		<ol id="peoples-list" class="project-list">
+		</ol>
+		
+	</div>
+	<div id="tabs-user-tasks">
+		
+		<ol id="user-tasks-list" class="project-list">
+		</ol>
+		
+	</div>
+</div>
+</body>
+</html>
