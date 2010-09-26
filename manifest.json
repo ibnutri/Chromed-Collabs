@@ -1,6 +1,6 @@
 {
-  "name": "ActiveCollab Viewer",
-  "version": "1.0",
+  "name": "Chromed Collabs",
+  "version": "1.0.2",
   "description": "Viewer for your activecollab projects and anything beyond",
   "browser_action": {
     "default_icon": "active_collab_icon.png",
