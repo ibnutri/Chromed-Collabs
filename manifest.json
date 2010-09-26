@@ -1,9 +1,9 @@
 {
   "name": "Chromed Collabs",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Viewer for your activecollab projects and anything beyond",
   "browser_action": {
-    "default_icon": "active_collab_icon.png",
+    "default_icon": "ac-chrome-icon-16.png",
     "popup": "popup.html"
   },
     "background_page": "background.html",
@@ -14,9 +14,9 @@
     "https://*/*"
   ],
   "icons": {
-    "19": "logo.gif",
-    "32": "logo.gif",
-    "48": "logo.gif"
+    "16": "ac-chrome-icon-16.png",
+    "48": "ac-chrome-icon-48.png",
+    "128": "ac-chrome-icon-128.png"
   },
   "options_page": "options.html",
   "update_url": "http://clients2.google.com/service/update2/crx"

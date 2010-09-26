@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<title>Chromed Collabs</title>
 <link type="text/css" href="css/custom-theme/jquery-ui-1.8.5.custom.css" rel="Stylesheet" />	
 <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.5.custom.min.js"></script>
@@ -228,10 +229,16 @@
 			//create_discussion_detail();
 		});
 	}
+	function openTab(tabUrl) {
+  		if(tabUrl.match(/^www/i)) {
+    		tabUrl = "http://" + tabUrl;
+  		}
+  		window.open(tabUrl);
+	}
 </script>
 </head>
 <body style="min-width:650px;min-height:350px">
-<img src="active_collab_icon.png"/>ChromedCollab
+<img src="ac-chrome-icon-48.png"/>ChromedCollab || <a href="#" onclick="openTab(chrome.extension.getURL('options.html'))"><span id="options" class="i18n">Options</span></a>
 <div id="validate-user-dialog" title="Debug dialog" style="display:none">
 	<p>default value</p>
 </div>
