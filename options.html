@@ -2,22 +2,46 @@
 <head>
 	<title>Options for ActiveCollab viewer</title>
 	<script type="text/javascript" src="options.js"></script>
+	<style type="text/css">
+		* {margin: 0;padding: 0}
+		body{font-family: Helvetica, Arial, sans-serif;font-size: 81.3%;padding:30px 50px;background: #eee}
+		h1 {background: url(ac-chrome-icon-48.png) no-repeat 0 center;padding-left: 53px;line-height: 48px;font-weight: normal}
+		.wrap {background: #fff;border:1px dashed #ddd;padding: 10px;-webkit-border-radius:10px;float: left;width: 370px;margin-bottom: 10px}
+		#cc-options p {height: 22px;margin-bottom: 5px;}
+		.wrap p:last-child {margin-bottom: 0 !important}
+		#cc-options p label {display:block;float: left;width: 150px;text-align: right;margin: 3px 10px 0 0;}
+		#cc-options input[type="text"] {float: left;width: 200px;border: 1px solid #eee;padding: 3px;}
+		.buttons {clear: both;width: 390px;text-align: right}
+		.buttons button {border: none;padding:5px 9px;cursor: pointer;-webkit-border-radius:4px;color: #fff}
+		#save {background: #333}
+		#restore {background: #f33}
+		.buttons button:hover {text-decoration: underline}
+	</style>
 </head>
 <body onload="loadOptions()">
-	<h1>Activecollab url</h1>
-	<input type="text" name="api_url" id="api_url">
-	<br />
-	<h1>Activecollab api key</h1>
-	<input type="text" name="api_key" id="api_key">
-	<br />
-	<h1>notification</h1>
-	<select id="notification">
-		<option value="yes">yes</option>
-		<option value="no">no</option>
-	</select>
-	<br />
-	<button onclick="saveOptions()">Save</button>
-	<br />
-	<button onclick="eraseOptions()">Restore default</button>
+	<h1>ChromedCollabs</h1>
+	<form action="#" id="cc-options">	
+		<div class="wrap">	
+			<p>
+				<label for="api_url">API URL :</label>
+				<input type="text" name="api_url" id="api_url"/>
+			</p>
+			<p>
+				<label for="api_key">ActiveCollab API Key :</label>
+				<input type="text" name="api_key" id="api_key">	
+			</p>
+			<p>
+				<label for="notification">Enable notifications?</label>
+				<select id="notification">
+					<option value="yes">yes</option>
+					<option value="no">no</option>
+				</select>
+			</p>
+		</div>
+		<div class="buttons">
+			<button onclick="saveOptions()" id="save">Save Settings</button>
+			<button onclick="eraseOptions()" id="restore">Restore default</button>
+		</div>
+	</form>
 </body>
 </html>
