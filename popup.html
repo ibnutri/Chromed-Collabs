@@ -2,18 +2,9 @@
 <html>
 <head>
 	<title>Chromed Collabs</title>
-<link type="text/css" href="css/custom-theme/jquery-ui-1.8.5.custom.css" rel="Stylesheet" />	
 <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.5.custom.min.js"></script>
-<style type="text/css">
-	#feedback { font-size: 1.4em; }
-	.project-list .ui-selecting { background: #FECA40; }
-	.project-list .ui-selected { background: #F39814; color: white; }
-	.project-list { list-style-type: none; margin: 0; padding: 0; width: 100%; }
-	.project-list li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
-	input.text { margin-bottom:12px; width:95%; padding: .4em; }
-	fieldset { padding:0; border:0; margin-top:25px; }
-</style>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
 <script type="text/javascript">
 	$(document).ready(function(){
 		//$('#date').datepicker();
@@ -237,8 +228,11 @@
 	}
 </script>
 </head>
-<body style="min-width:650px;min-height:350px">
-<img src="ac-chrome-icon-48.png"/>ChromedCollab || <a href="#" onclick="openTab(chrome.extension.getURL('options.html'))"><span id="options" class="i18n">Options</span></a>
+<body>
+<h1>ChromedCollab</h1>
+<div id="optionlink">
+	<a href="#" onclick="openTab(chrome.extension.getURL('options.html'))"><span id="options" class="i18n">Options</span></a>
+</div>
 <div id="validate-user-dialog" title="Debug dialog" style="display:none">
 	<p>default value</p>
 </div>
@@ -255,19 +249,19 @@
 	<button id="validate-user">Validate user</button>
 	</form>
 </div>	
+<div class="clear"></div>
 <div id="tabs" >
-	<ul>name
-		<li><a href="#tabs-projects"><span id="select-result">Select project</span></a></li>
-		<li><a href="#tabs-discussion">discussion</a></li>
-		<li><a href="#tabs-files">files</a></li>
-		<li><a href="#tabs-calendar">calendar</a></li>
-		<li><a href="#tabs-tickets">tickets</a></li>
-		<li><a href="#tabs-time">time</a></li>
-		<li><a href="#tabs-people">people</a></li>
-		<li><a href="#tabs-user-tasks">user tasks</a></li>
-
+	<h2 id="project-name"><span id="select-result">Project Name</span></h2>
+	<ul>
+		<li id="icon-projects"><a href="#tabs-projects">Projects</a></li>
+		<li id="icon-discussion"><a href="#tabs-discussion">Discussion</a></li>
+		<li id="icon-files"><a href="#tabs-files">Files</a></li>
+		<li id="icon-calendar"><a href="#tabs-calendar">Calendar</a></li>
+		<li id="icon-tickets"><a href="#tabs-tickets">Tickets</a></li>
+		<li id="icon-time"><a href="#tabs-time">Time</a></li>
+		<li id="icon-people"><a href="#tabs-people">People</a></li>
+		<li id="icon-tasks"><a href="#tabs-user-tasks">Tasks</a></li>
 	</ul>
-	
 	<div id="tabs-projects">
 		<ol id="project-list" class="project-list">
 		</ol>
@@ -277,7 +271,6 @@
 		<p id="discussion-description"></p>
 		<ol id="discussions-list" class="project-list">
 		</ol>
-		
 		<div id="discussions-detail">			
 		</div>
 	</div>
@@ -291,7 +284,6 @@
 	<div id="tabs-tickets">
 		<ol id="tickets-list" class="project-list">
 		</ol>
-		
 	</div>
 	<div id="tabs-time">
 		<p>for tickets</p>
@@ -300,13 +292,10 @@
 	<div id="tabs-people">
 		<ol id="peoples-list" class="project-list">
 		</ol>
-		
 	</div>
 	<div id="tabs-user-tasks">
-		
 		<ol id="user-tasks-list" class="project-list">
 		</ol>
-		
 	</div>
 </div>
 </body>
